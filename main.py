@@ -36,6 +36,7 @@ response = requests.get("https://habr.com/ru/articles/", headers=generate_header
 main_html = response.text
 
 main_page_soup = bs4.BeautifulSoup(main_html, features="lxml")
+print(main_page_soup)
 
 tm_articles_list_tag = main_page_soup.find("div", class_ = "tm-articles-list")
 
@@ -77,7 +78,25 @@ for article_tag in article_tags:
 pprint(parsed_articles_list)
 
 
+# Задание: спарси список популярных фильмов с сайта КиноПоиск или IMDb
 
+link = "https://www.imdb.com/chart/top/"
+
+response = requests.get(link, headers=generate_headers())
+
+mn_html = response.text
+
+mn_page_soup = bs4.BeautifulSoup(main_html, "lxml")
+
+top_movies = main_page_soup.find("ul", class_="ipc-metadata-list ipc-metadata-list--dividers-between sc-e22973a9-0 khSCXM compact-list-view ipc-metadata-list--base")
+
+top_ten_movies_block = top_movies.find_all("li")[:10]
+
+for movie in top_ten_movies_block:
+    div_tag = movie.find("div")
+    h3_tag = div_tag.find("h3")
+
+    print(h3_tag.text)
 
 
 
