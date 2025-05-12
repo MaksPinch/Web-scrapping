@@ -40,7 +40,7 @@ except requests.RequestException as e:
 main_html = response.text
 
 main_page_soup = bs4.BeautifulSoup(main_html, features="lxml")
-print(main_page_soup)
+
 
 tm_articles_list_tag = main_page_soup.find("div", class_ = "tm-articles-list")
 
