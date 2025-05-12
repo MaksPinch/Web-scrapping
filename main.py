@@ -13,7 +13,7 @@ from fake_headers import Headers
 
 keywords = [
     "интеллект",
-    "история"
+    "история",
     "Код",
     "Хабр",
     "GPT",
@@ -30,8 +30,12 @@ def generate_headers():
 
     return headers
 
-
-response = requests.get("https://habr.com/ru/articles/", headers=generate_headers())
+try:
+    response = requests.get("https://habr.com/ru/articles/", headers=generate_headers())
+    response.raise_for_status()
+except requests.RequestException as e:
+    print(f"Ошибка при запросе Хабр: {e}")
+    exit()
 
 main_html = response.text
 
@@ -82,13 +86,18 @@ pprint(parsed_articles_list)
 
 link = "https://www.imdb.com/chart/top/"
 
-response = requests.get(link, headers=generate_headers())
+try:
+    response = requests.get(link, headers=generate_headers())
+    response.raise_for_status()
+except requests.RequestException as e:
+    print(f"Ошибка при запросе IMDb: {e}")
+    exit()
 
 mn_html = response.text
 
-mn_page_soup = bs4.BeautifulSoup(main_html, "lxml")
+mn_page_soup = bs4.BeautifulSoup(mn_html, "lxml")
 
-top_movies = main_page_soup.find("ul", class_="ipc-metadata-list ipc-metadata-list--dividers-between sc-e22973a9-0 khSCXM compact-list-view ipc-metadata-list--base")
+top_movies = mn_page_soup.find("ul", class_="ipc-metadata-list ipc-metadata-list--dividers-between sc-e22973a9-0 khSCXM compact-list-view ipc-metadata-list--base")
 
 top_ten_movies_block = top_movies.find_all("li")[:10]
 
